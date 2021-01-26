@@ -16,8 +16,8 @@
         <div class="col">
             <div class="card">
                 <div class="card-header" style="text-align: right;">
-                    <button type="button" class="btn btn-primary">Load</button>
-                    <button type="button" class="btn btn-info">Add card</button>
+                    {{--<button type="button" class="btn btn-primary">Load</button>
+                    <button type="button" class="btn btn-info">Add card</button>--}}
                 </div>
                 <div class="card-body">
                     @if(!empty($alert))
@@ -62,8 +62,8 @@
                     </table>
                 </div>
                 <div class="card-footer" style="text-align: right;">
-                    <button type="button" class="btn btn-primary">Load</button>
-                    <button type="button" class="btn btn-info">Add card</button>
+                    {{--<button type="button" class="btn btn-primary">Load</button>
+                    <button type="button" class="btn btn-info">Add card</button>--}}
                 </div>
             </div>
         </div>
