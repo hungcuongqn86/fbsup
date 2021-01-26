@@ -19,30 +19,37 @@
                     <button type="button" class="btn btn-info">Add card</button>
                 </div>
                 <div class="card-body">
-                    <table class="table table-dark table-hover">
+                    @if(!empty($alert))
+                        @foreach($alert as $alertItem)
+                            <div class="alert alert-danger">
+                                <strong>Thông báo!</strong> {{$alertItem}}
+                            </div>
+                        @endforeach
+                    @endif
+                    <table class="table table-dark table-striped table-hover">
                         <thead>
                         <tr>
-                            <th>Firstname</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
+                            <th>STT</th>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>account_id</th>
+                            <th>Trạng thái</th>
+                            <th>Trạng thái thẻ</th>
+                            <th>#</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
-                        </tr>
-                        <tr>
-                            <td>Mary</td>
-                            <td>Moe</td>
-                            <td>mary@example.com</td>
-                        </tr>
-                        <tr>
-                            <td>July</td>
-                            <td>Dooley</td>
-                            <td>july@example.com</td>
-                        </tr>
+                        @foreach($data as $adsItem)
+                            <tr>
+                                <td>{{ $loop->index + 1}}</td>
+                                <td>{{$adsItem['id']}}</td>
+                                <td>{{$adsItem['name']}}</td>
+                                <td>{{$adsItem['account_id']}}</td>
+                                <td>{{(($adsItem['account_status']==1)? "Hoạt động": "Không hoạt động")}}</td>
+                                <td>{{$adsItem['hasCard']}}</td>
+                                <td><input type="checkbox" class="form-check-input" value=""></td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
