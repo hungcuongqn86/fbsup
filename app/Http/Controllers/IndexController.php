@@ -226,16 +226,26 @@ class IndexController extends Controller
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($curl, CURLOPT_VERBOSE, true);
-        curl_setopt($curl, CURLOPT_HEADER, 1);
-        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+        // curl_setopt($curl, CURLOPT_HEADER, 1);
+        // curl_setopt($curl, CURLINFO_HEADER_OUT, true);
 
         $result = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $response = json_decode($result, true);
-        dd([$info, $result]);
-        // dd($info);
-        // echo $result;
+        // $info = curl_getinfo($curl);
+        // $response = json_decode($result, true);
         curl_close($curl);
-        exit;
+        // dd([$result]);
+        if (empty($result)) {
+            return response()->json([
+                'status' => false,
+                'data' => []
+            ]);
+        } else {
+            $result = str_replace("for (;;);", '', $result);
+            $response = json_decode($result, true);
+            return response()->json([
+                'status' => true,
+                'data' => $response
+            ]);
+        }
     }
 }

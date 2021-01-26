@@ -4,7 +4,7 @@
     <list default="true" id="b35e8277-393f-41e8-bee8-63dce0c443eb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/IndexController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/IndexController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/addcard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/addcard.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/fbsup/cards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/storage/fbsup/cards.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage/fbsup/facebook.com_cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/storage/fbsup/facebook.com_cookies.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -159,7 +159,7 @@
       <option name="presentableId" value="Default" />
       <updated>1611629118310</updated>
       <workItem from="1611629121211" duration="1036000" />
-      <workItem from="1611667528267" duration="1900000" />
+      <workItem from="1611667528267" duration="3231000" />
     </task>
     <servers />
   </component>
