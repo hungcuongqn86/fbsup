@@ -72,18 +72,27 @@ class IndexController extends Controller
 
                 //Check card
                 foreach ($data as $key => $adsTk) {
-                    $url = "https://graph.facebook.com/v7.0/" . $adsTk['id'] . "?access_token=" . $arrAccItem[1] . "&fields=%5B%22can_pay_now%22%5D";
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    $checkRes = curl_exec($curl);
-                    if (!empty($checkRes)) {
-                        $resData = json_decode($checkRes, true);
-                        $data[$key]['hasCard'] = $resData['can_pay_now'] ? "Đã add" : "Chưa add";
+                    if ($adsTk['account_status'] == 1) {
+                        $url = "https://graph.facebook.com/v7.0/" . $adsTk['id'] . "?access_token=" . $arrAccItem[1] . "&fields=%5B%22can_pay_now%22%5D";
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        $checkRes = curl_exec($curl);
+                        if (!empty($checkRes)) {
+                            $resData = json_decode($checkRes, true);
+                            $data[$key]['hasCard'] = $resData['can_pay_now'] ? "Đã add" : "Chưa add";
+                            $data[$key]['canAddCard'] = !$resData['can_pay_now'];
+                        } else {
+                            $data[$key]['hasCard'] = '-';
+                            $data[$key]['canAddCard'] = false;
+                        }
+                    } else {
+                        $data[$key]['hasCard'] = '-';
+                        $data[$key]['canAddCard'] = false;
                     }
                 }
             }
             curl_close($curl);
         }
-
+        // dd($data);
         return view('addcard', ['alert' => $alert, 'data' => $data]);
     }
 

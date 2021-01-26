@@ -50,9 +50,11 @@
                                 <td>{{$adsItem['hasCard']}}</td>
                                 <td>{{--<input type="checkbox" class="form-check-input" value=""
                                            style="margin-left: 0;">--}}
+                                    @if(!empty($adsItem['canAddCard']))
                                     <button type="button" data-id="{{$adsItem['account_id']}}"
                                             class="btn btn-primary btn-sm add-card-btn">Add thẻ
                                     </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
