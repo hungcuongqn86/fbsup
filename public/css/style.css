@@ -1,0 +1,19 @@
+.loading .loading-overlay  {
+    position: fixed;
+    background-color: #a9cefb;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.6;
+    z-index: 99998;
+}
+
+.loading .loading-pre  {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+    z-index: 99999;
+}

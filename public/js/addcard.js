@@ -2,6 +2,7 @@ $(document).ready(function () {
     "use strict";
     $(document).on('click', '.add-card-btn', function (e) {
         e.preventDefault();
+        showLoading();
         const adsId = $(this).data("id");
         const url = './addcard/' + adsId;
         $.ajaxSetup({
@@ -17,9 +18,11 @@ $(document).ready(function () {
             data: {},
             success: function (res) {
                 console.log(1, res);
+                hideLoading();
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log(2, thrownError);
+                hideLoading();
             }
         });
     });
