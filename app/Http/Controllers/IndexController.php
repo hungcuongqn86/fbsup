@@ -96,11 +96,26 @@ class IndexController extends Controller
         return view('addcard', ['alert' => $alert, 'data' => $data]);
     }
 
+    private function getCard()
+    {
+        $cardFile = storage_path('fbsup/cards.txt');
+        $card = '';
+        if (file_exists($cardFile)) {
+            $file = fopen($cardFile, "r");
+            $card = str_replace("\r\n", '', fgets($file));
+            fclose($file);
+        }
+        return !empty($card) ? explode('|', $card) : [];
+    }
+
     public function addCard($id)
     {
         $cookie_file = storage_path('fbsup/facebook.com_cookies.txt');
         if (!file_exists($cookie_file)) {
-            return 0;
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được Cookie!']
+            ]);
         }
         $url = "https://business.facebook.com/help/contact/649167531904667?ref=4";
         $curl = curl_init();
@@ -121,6 +136,12 @@ class IndexController extends Controller
         curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_file);
         curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie_file);
         $data = curl_exec($curl);
+        if (empty($data)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không load được contact form!']
+            ]);
+        }
 
         // Get cookie
         $c_user = '';
@@ -139,15 +160,27 @@ class IndexController extends Controller
             }
         }
 
-        // card
-        $cardFile = storage_path('fbsup/cards.txt');
-        $card = '';
-        if (file_exists($cardFile)) {
-            $file = fopen($cardFile, "r");
-            $card = str_replace("\r\n", '', fgets($file));
-            fclose($file);
+        if (empty($c_user)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được VIA!']
+            ]);
         }
-        $arrcard = !empty($card) ? explode('|', $card) : [];
+
+        if (empty($spin)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được SPIN!']
+            ]);
+        }
+        // card
+        $arrcard = self::getCard();
+        if (empty($arrcard)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được thẻ!']
+            ]);
+        }
 
         $doc = new \DOMDocument();
         $doc->loadHTML($data);
@@ -161,6 +194,20 @@ class IndexController extends Controller
             if ($hideninput->getAttribute('name') == 'jazoest') {
                 $jazoest = $hideninput->getAttribute('value');
             }
+        }
+
+        if (empty($fb_dtsg)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được fb_dtsg!']
+            ]);
+        }
+
+        if (empty($jazoest)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được jazoest!']
+            ]);
         }
 
         $fields = [
@@ -237,7 +284,7 @@ class IndexController extends Controller
         if (empty($result)) {
             return response()->json([
                 'status' => false,
-                'data' => []
+                'data' => ['Lỗi khi post dữ liệu!']
             ]);
         } else {
             $result = str_replace("for (;;);", '', $result);
