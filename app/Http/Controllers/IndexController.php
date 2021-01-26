@@ -48,7 +48,7 @@ class IndexController extends Controller
         }
 
         $data = [];
-        return view('addcard', ['alert' => $alert, 'data' => $data]);
+        // return view('addcard', ['alert' => $alert, 'data' => $data]);
 
         if (!empty($arrAcc)) {
             $arrAccItem = explode('|', $arrAcc[0]);
