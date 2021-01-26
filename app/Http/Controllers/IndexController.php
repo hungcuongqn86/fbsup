@@ -111,7 +111,28 @@ class IndexController extends Controller
 
         curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_file);
         curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie_file);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
         $data = curl_exec($curl);
+
+        // Get cookie
+        $c_user = '';
+        $spin = '';
+        $cookies = curl_getinfo($curl, CURLINFO_COOKIELIST);
+        foreach ($cookies as $cookie) {
+            $arrPath = explode("\t", $cookie);
+            if ($arrPath[5] == 'c_user') {
+                $c_user = $arrPath[6];
+            }
+
+            if ($arrPath[5] == 'spin') {
+                $arrspin = !empty($arrPath[6]) ? explode('_', $arrPath[6]) : [];
+                $spinR = !empty($arrspin[0]) ? explode('.', $arrspin[0]) : [];
+                $spin = !empty($spinR[1]) ? $spinR[1] : '';
+            }
+        }
+
+        dd([$c_user, $spin]);
 
         $doc = new \DOMDocument();
         $doc->loadHTML($data);
@@ -129,7 +150,7 @@ class IndexController extends Controller
 
         $fields = [
             'kpts' => '',
-            'account_id' => '259085002592000',
+            'account_id' => $id,
             'app_id' => '123097351040126',
             'country' => 'US',
             'context_id' => '107084634720026',
@@ -152,7 +173,7 @@ class IndexController extends Controller
             'geo_country' => 'US',
             'exp[month]' => '09',
             'exp[year]' => '27',
-            '__user' => '100062554680718',
+            '__user' => $c_user,
             '__a' => '1',
             '__dyn' => '',
             '__csr' => '',
@@ -166,12 +187,17 @@ class IndexController extends Controller
             '__hsi' => '6921694125378614995-0',
             'fb_dtsg' => $fb_dtsg,
             'jazoest' => $jazoest,
-            '__spin_r' => "1003215054",
+            '__spin_r' => $spin,
             '__spin_b' => "trunk",
             '__spin_t' => time() . '',
             '__jssesw' => "1",
         ];
 
+        return response()->json([
+            'status' => true,
+            'data' => $fields,
+        ]);
+        dd($fields);
         $fields_string = http_build_query($fields);
 
         curl_setopt($curl, CURLOPT_URL, 'https://business.secure.facebook.com/ajax/payment/token_proxy.php?tpe=%2Fpayments%2Fcredit_card%2Fmutator%2Fcreate%2F&__a=1');
@@ -187,11 +213,9 @@ class IndexController extends Controller
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-        curl_setopt($curl, CURLOPT_HEADER, 1);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($curl, CURLOPT_VERBOSE, true);
-        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
 
         $result = curl_exec($curl);
         $info = curl_getinfo($curl);
