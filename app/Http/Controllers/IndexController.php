@@ -99,17 +99,49 @@ class IndexController extends Controller
     private function getCard()
     {
         $cardFile = storage_path('fbsup/cards.txt');
-        $card = '';
-        if (file_exists($cardFile)) {
-            $file = fopen($cardFile, "r");
-            $card = str_replace("\r\n", '', fgets($file));
-            fclose($file);
-        }
+        $card = self::file_pop($cardFile);
         return !empty($card) ? explode('|', $card) : [];
+    }
+
+    private function file_pop($file)
+    {
+        if ($fp = @fopen($file, "c+")) {
+            if (!flock($fp, LOCK_EX)) {
+                fclose($fp);
+            }
+            $pos = -1;
+            $found = 0;
+            while ($found < 2) {
+                if (fseek($fp, $pos--, SEEK_END) < 0) { // can not seek to position
+                    rewind($fp); // rewind to the beginnung of the file
+                    break;
+                };
+                if (ord(fgetc($fp)) == 10) { // newline
+                    $found++;
+                }
+            }
+            $lastpos = ftell($fp); // get current position of file
+            $lastline = fgets($fp); // get current line
+
+            ftruncate($fp, $lastpos); // truncate file to last position
+            flock($fp, LOCK_UN); // unlock
+            fclose($fp); // close the file
+
+            return trim($lastline);
+        }
     }
 
     public function addCard($id)
     {
+        // card
+        $arrcard = self::getCard();
+        if (empty($arrcard)) {
+            return response()->json([
+                'status' => false,
+                'data' => ['Không lấy được thẻ!']
+            ]);
+        }
+
         $cookie_file = storage_path('fbsup/facebook.com_cookies.txt');
         if (!file_exists($cookie_file)) {
             return response()->json([
@@ -171,14 +203,6 @@ class IndexController extends Controller
             return response()->json([
                 'status' => false,
                 'data' => ['Không lấy được SPIN!']
-            ]);
-        }
-        // card
-        $arrcard = self::getCard();
-        if (empty($arrcard)) {
-            return response()->json([
-                'status' => false,
-                'data' => ['Không lấy được thẻ!']
             ]);
         }
 
