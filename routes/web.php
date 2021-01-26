@@ -17,4 +17,5 @@ Route::group([
     'namespace' => '\App\Http\Controllers'
 ], function () {
     Route::get('/', 'IndexController@index');
+    Route::post('/addcard/{id}', 'IndexController@addCard');
 });
