@@ -111,8 +111,6 @@ class IndexController extends Controller
 
         curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_file);
         curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie_file);
-        curl_setopt($curl, CURLOPT_HEADER, 1);
-        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
         $data = curl_exec($curl);
 
         // Get cookie
@@ -132,7 +130,15 @@ class IndexController extends Controller
             }
         }
 
-        dd([$c_user, $spin]);
+        // card
+        $cardFile = storage_path('fbsup/cards.txt');
+        $card = '';
+        if (file_exists($cardFile)) {
+            $file = fopen($cardFile, "r");
+            $card = str_replace("\r\n", '', fgets($file));
+            fclose($file);
+        }
+        $arrcard = !empty($card) ? explode('|', $card) : [];
 
         $doc = new \DOMDocument();
         $doc->loadHTML($data);
@@ -165,14 +171,14 @@ class IndexController extends Controller
             'flow_type' => '',
             'checks[csc]' => true,
             'cc_save' => true,
-            'creditCardNumber' => '5151093210818853',
-            'csc' => '329',
+            'creditCardNumber' => $arrcard[0],
+            'csc' => $arrcard[3],
             'zip' => '',
             'is_from_support' => true,
             'source_support_form_id' => '649167531904667',
             'geo_country' => 'US',
-            'exp[month]' => '09',
-            'exp[year]' => '27',
+            'exp[month]' => $arrcard[1],
+            'exp[year]' => substr($arrcard[2], -2),
             '__user' => $c_user,
             '__a' => '1',
             '__dyn' => '',
@@ -193,11 +199,6 @@ class IndexController extends Controller
             '__jssesw' => "1",
         ];
 
-        return response()->json([
-            'status' => true,
-            'data' => $fields,
-        ]);
-        dd($fields);
         $fields_string = http_build_query($fields);
 
         curl_setopt($curl, CURLOPT_URL, 'https://business.secure.facebook.com/ajax/payment/token_proxy.php?tpe=%2Fpayments%2Fcredit_card%2Fmutator%2Fcreate%2F&__a=1');
@@ -216,6 +217,8 @@ class IndexController extends Controller
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($curl, CURLOPT_VERBOSE, true);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
 
         $result = curl_exec($curl);
         $info = curl_getinfo($curl);
@@ -225,6 +228,5 @@ class IndexController extends Controller
         // echo $result;
         curl_close($curl);
         exit;
-        // return view('index');
     }
 }
