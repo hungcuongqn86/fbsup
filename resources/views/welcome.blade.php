@@ -10,51 +10,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-
 <div class="container">
     <div class="row">
         <div class="col">
             <div class="card">
-                <div class="card-header">
-                    <button type="button" class="btn btn-primary">Load</button>
-                    <button type="button" class="btn btn-info">Add card</button>
-                </div>
-                <div class="card-body">
-                    <table class="table table-dark table-hover">
-                        <thead>
-                        <tr>
-                            <th>Firstname</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
-                        </tr>
-                        <tr>
-                            <td>Mary</td>
-                            <td>Moe</td>
-                            <td>mary@example.com</td>
-                        </tr>
-                        <tr>
-                            <td>July</td>
-                            <td>Dooley</td>
-                            <td>july@example.com</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary">Load</button>
-                    <button type="button" class="btn btn-info">Add card</button>
-                </div>
+                <p>welcome</p>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
